@@ -18,6 +18,7 @@
   --tx3:#888888;
   --bd:#111111;       /* حدود قوية */
   --bd2:#E0E0DC;      /* فواصل خفيفة */
+  --bdi:#D5D5CE;      /* حدود الحقول — رفيعة وهادئة */
   --grn:#005B36;      /* أخضر الهوية */
   --grn-h:#007249;    /* أخضر عند التحويم */
   --ov:#9DB35A;       /* زيتوني الهوية */
@@ -31,7 +32,7 @@
 }
 :root[data-theme=dark]{
   --bg:#000000; --sf:#111111; --tx:#FFFFFF; --tx2:#BBBBBB; --tx3:#6E6E6E;
-  --bd:#FFFFFF; --bd2:#2C2C2C; --inp:#000000;
+  --bd:#FFFFFF; --bd2:#2C2C2C; --bdi:#4A4A4A; --inp:#000000;
   --grn:#3FBF87; --grn-h:#5AD09C; --ov:#B7CB72;
   --ac:#00784B; --ac-tx:#FFFFFF;
   --err:#FF6B55; --ring:rgba(63,191,135,.24);
@@ -57,6 +58,7 @@ body{font-size:1rem;}
   flex-wrap:wrap;row-gap:.45rem;
   max-width:31.25rem;width:100%;margin:0 auto;gap:.75rem;
 }
+body.wide .topbar{max-width:58rem;}
 .logo{height:1.625rem;width:auto;max-width:100%;display:block;filter:var(--logo-f);}
 .bar-right{display:flex;align-items:center;gap:.8rem;min-width:0;margin-inline-start:auto;}
 .step-lbl{font-size:.7rem;color:var(--tx3);font-variant-numeric:tabular-nums;
@@ -69,10 +71,14 @@ body{font-size:1rem;}
 .icon-btn{background:none;border:none;cursor:pointer;font-size:.95rem;color:var(--tx2);line-height:1;padding:.15rem;}
 
 .content{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem 1.5rem;}
-.stage-wrap{width:100%;max-width:27.5rem;position:relative;min-height:1px;}
+.stage-wrap{width:100%;max-width:54rem;position:relative;min-height:1px;}
 
 /* ─── انتقال الشاشات ─── */
-.screen{width:100%;transition:opacity .28s ease, transform .28s ease;}
+.screen{
+  width:100%;max-width:27.5rem;margin-inline:auto;
+  transition:opacity .28s ease, transform .28s ease;
+}
+.screen.wide{max-width:100%;}   /* شاشة البند الكامل — تستغل عرض الشاشة */
 .screen.entering{opacity:0;transform:translateY(14px);}
 .screen.active{opacity:1;transform:translateY(0);}
 .screen.exiting{
@@ -88,12 +94,6 @@ body{font-size:1rem;}
 }
 .scr-sub{font-size:.9rem;color:var(--tx2);line-height:1.6;margin-bottom:1.7rem;}
 .scr-sub.tight{margin-bottom:1.1rem;}
-.qnum-accent{
-  font-size:4.4rem;font-weight:800;letter-spacing:-.04em;line-height:.9;
-  color:var(--grn);opacity:.14;font-variant-numeric:tabular-nums;
-  margin-bottom:-.55rem;user-select:none;
-}
-
 /* ─── قبل البدء: نقاط بسيطة بدون صناديق ─── */
 .lede{
   font-size:.9rem;color:var(--tx2);line-height:1.65;margin-bottom:1.5rem;
@@ -134,7 +134,7 @@ body{font-size:1rem;}
 .field{display:flex;flex-direction:column;gap:.3rem;}
 .field-lbl{font-size:.7rem;font-weight:700;color:var(--tx2);padding-right:.15rem;}
 .field-inp{
-  background:var(--inp);border:1.5px solid var(--bd);border-radius:.7rem;
+  background:var(--inp);border:1px solid var(--bdi);border-radius:.7rem;
   padding:.78rem 1rem;font-size:.97rem;color:var(--tx);
   font-family:var(--font);outline:none;width:100%;
   transition:box-shadow .18s,border-color .18s;
@@ -150,11 +150,12 @@ body{font-size:1rem;}
 .yr-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.7rem;}
 .yr-item{
   display:grid;grid-template-columns:auto 1px 1fr auto;align-items:center;gap:.85rem;
-  background:var(--inp);border:1.5px solid var(--bd);border-radius:.7rem;padding:.7rem 1rem;
+  background:var(--inp);border:1px solid var(--bdi);border-radius:.65rem;padding:.72rem .95rem;
   transition:box-shadow .18s,border-color .18s;
 }
 .yr-item:focus-within{border-color:var(--grn);box-shadow:0 0 0 3px var(--ring);}
-.yr-tag{font-size:.78rem;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;}
+.yr-item.bad,.num-field.bad,.ta-wrap.bad{border-color:var(--err);}
+.yr-tag{font-size:.76rem;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;}
 .yr-divider{height:1.125rem;width:1px;background:var(--bd2);}
 .yr-val{
   background:transparent;border:none;outline:none;
@@ -163,11 +164,11 @@ body{font-size:1rem;}
   font-family:var(--font);width:100%;direction:ltr;
 }
 .yr-val::placeholder{color:var(--tx3);font-weight:400;}
-.yr-unit{font-size:.72rem;font-weight:700;color:var(--grn);white-space:nowrap;}
+.yr-unit{font-size:.72rem;font-weight:600;color:var(--tx3);white-space:nowrap;}
 /* ─── حقل رقمي مفرد ─── */
 .num-field{
   display:grid;grid-template-columns:1fr auto;align-items:center;gap:.85rem;
-  background:var(--inp);border:1.5px solid var(--bd);border-radius:.7rem;padding:.75rem 1rem;
+  background:var(--inp);border:1px solid var(--bdi);border-radius:.65rem;padding:.72rem .95rem;
   transition:box-shadow .18s,border-color .18s;margin-bottom:1.5rem;
 }
 .num-field:focus-within{border-color:var(--grn);box-shadow:0 0 0 3px var(--ring);}
@@ -178,12 +179,12 @@ body{font-size:1rem;}
   direction:ltr;text-align:right;font-family:var(--font);
 }
 .num-inp::placeholder{color:var(--tx3);font-weight:400;font-size:.95rem;}
-.num-unit{font-size:.78rem;font-weight:700;color:var(--grn);}
+.num-unit{font-size:.76rem;font-weight:600;color:var(--tx3);}
 
 /* ─── حقل نصي (المواصفات) ─── */
 .ta-wrap{
-  background:var(--inp);border:1.5px solid var(--bd);border-radius:.7rem;
-  padding:.75rem 1rem .5rem;margin-bottom:1.5rem;
+  background:var(--inp);border:1px solid var(--bdi);border-radius:.65rem;
+  padding:.75rem .95rem .5rem;margin-bottom:1.5rem;
   transition:box-shadow .18s,border-color .18s;
 }
 .ta-wrap:focus-within{border-color:var(--grn);box-shadow:0 0 0 3px var(--ring);}
@@ -278,6 +279,39 @@ body{font-size:1rem;}
 }
 .resume-box b{color:var(--tx);}
 
+/* ─── شاشة البند الكامل: كل أقسام البند في صفحة واحدة ─── */
+.item-title{margin-bottom:1.9rem;}
+.sec-grid{display:grid;grid-template-columns:1fr;gap:1.9rem;margin-bottom:2rem;}
+.sec{display:flex;flex-direction:column;}
+.sec-h{
+  display:flex;align-items:center;gap:.6rem;
+  padding-bottom:.5rem;border-bottom:1px solid var(--bdi);margin-bottom:.55rem;
+}
+.sec-n{
+  width:1.2rem;height:1.2rem;border-radius:.3rem;flex-shrink:0;
+  background:var(--ac);color:var(--ac-tx);
+  font-size:.68rem;font-weight:700;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;
+}
+.sec-t{font-size:.95rem;font-weight:700;color:var(--tx);letter-spacing:-.012em;line-height:1.3;}
+.sec-d{font-size:.73rem;color:var(--tx3);line-height:1.5;margin-bottom:.75rem;}
+.sec .yr-list{margin-bottom:0;gap:.4rem;}
+.sec .num-field{margin-bottom:0;}
+.sec .err-msg{margin:.6rem 0 0;}
+.s-spec .ta-wrap{flex:1;display:flex;flex-direction:column;margin-bottom:0;}
+.s-spec .ta{flex:1;min-height:5rem;}
+.t-body{display:contents;}   /* بلا صندوق — الحقل يحاذي أعلى القسم المجاور */
+.t-note{font-size:.72rem;color:var(--tx3);line-height:1.5;margin-top:.55rem;}
+
+.item-actions{display:flex;flex-direction:column;}
+
+@media(min-width:820px){
+  .sec-grid{grid-template-columns:1fr 1fr;column-gap:3rem;row-gap:2.1rem;}
+  .item-actions{flex-direction:row-reverse;justify-content:flex-start;align-items:center;gap:1.1rem;}
+  .item-actions .btn-primary{width:auto;min-width:13.5rem;}
+  .item-actions .btn-back{width:auto;margin-top:0;padding:.55rem .5rem;}
+}
+
 /* ─── تجاوب ─── */
 @media(max-width:500px){
   .topbar{padding:1.1rem 1.25rem 0;}
@@ -287,11 +321,12 @@ body{font-size:1rem;}
   .saved{font-size:.62rem;}
   .content{padding:1.4rem 1.1rem 1.25rem;}
   .scr-title{font-size:1.5rem;}
-  .qnum-accent{font-size:3.4rem;}
   .step-lbl{font-size:.65rem;}
 }
 @media(min-width:900px){
   .topbar{padding:1.75rem 0 0;}
+  /* في الوضع العريض: نفس هوامش المحتوى تماماً ليتحاذى الشعار مع الشبكة */
+  body.wide .topbar{max-width:57rem;padding-inline:1.5rem;}
   .content{padding:2.5rem 1.5rem 2rem;}
 }
 /* الدسكتوب: نكبّر المقياس كله بدل أن يزوّم المستخدم يدوياً */
@@ -404,6 +439,7 @@ function persist(quiet){
   if(wiped) return;
   try{
     D._idx = idx;
+    D._sv  = SCREEN_VER;
     D._at  = new Date().toISOString();
     localStorage.setItem(STORE_KEY, JSON.stringify(D));
     if(!quiet) flashSaved('✓ محفوظ على جهازك');
@@ -453,6 +489,13 @@ if(!D._ref) D._ref = makeRef();
 
 /* ═══════════ أدوات ═══════════ */
 function $(id){ return document.getElementById(id); }
+/* البحث داخل الشاشة النشطة — أثناء الانتقال توجد شاشتان في DOM */
+function $a(id){
+  const st = $('stage');
+  const sc = st ? st.querySelector('.screen.active') : null;
+  if(sc){ const el = sc.querySelector('[id="' + id + '"]'); if(el) return el; }
+  return $(id);
+}
 function esc(s){
   return String(s==null?'':s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -539,25 +582,30 @@ function K(it,q,y){ return it.id + '_' + q + (y ? '_' + y : ''); }
 
 const SCREENS = [ {type:'terms'}, {type:'info'} ];
 ITEMS.forEach(function(it,ii){
-  const eyebrow = 'البند ' + (ii+1) + ' من 6 · ' + it.name;
-  SCREENS.push({ type:'multi-year', ii:ii, qi:0, eyebrow:eyebrow, title:it.q1,
-    sub:'المُنجز والمُسلَّم فعليًا — إن لم يوجد اكتب 0.',
-    unit:it.unit,
-    keys:YEARS.map(function(y){ return K(it,'q1',y); }) });
-  SCREENS.push({ type:'text', ii:ii, qi:1, eyebrow:eyebrow, title:it.q2,
-    ph:it.q2ph, key:K(it,'q2') });
-  SCREENS.push({ type:'multi-year', ii:ii, qi:2, eyebrow:eyebrow, title:it.q3,
-    sub:'المبلغ الفعلي المدفوع شاملاً التوريد والتركيب.',
-    unit:'ريال',
-    keys:YEARS.map(function(y){ return K(it,'q3',y); }) });
-  SCREENS.push({ type:'number', ii:ii, qi:3, eyebrow:eyebrow, title:it.q4,
-    unit:it.unit, key:K(it,'q4') });
+  /* بند كامل في شاشة واحدة: الكمية المنجزة + التكلفة + المواصفات + مستهدف 2026 */
+  SCREENS.push({
+    type:'item', ii:ii,
+    k1:YEARS.map(function(y){ return K(it,'q1',y); }),   /* الكمية المنجزة */
+    k2:K(it,'q2'),                                       /* المواصفات */
+    k3:YEARS.map(function(y){ return K(it,'q3',y); }),   /* التكلفة المدفوعة */
+    k4:K(it,'q4')                                        /* مستهدف 2026 */
+  });
 });
 SCREENS.push({ type:'review' });
 SCREENS.push({ type:'done' });
 
 const FIRST_Q  = 2;
 const DONE_IDX = SCREENS.length - 1;
+/* نسخة ترتيب الشاشات — لترحيل موضع الاستئناف المحفوظ من الترتيب القديم */
+const SCREEN_VER = 2;
+
+/* عناوين أقسام البند — ثابتة لكل البنود */
+const SECS = [
+  { n:1, t:'الكمية المنجزة فعليًا', d:'المُنجز والمُسلَّم فعليًا — اكتب 0 إن لم يوجد.' },
+  { n:2, t:'التكلفة المدفوعة',      d:'المبلغ المدفوع شاملاً التوريد والتركيب.' },
+  { n:3, t:'المواصفات المعتمدة',    d:'اكتب «لا يوجد» إن لم تنفذوا هذا البند.' },
+  { n:4, t:'المستهدف خلال 2026',    d:'رقم واقعي بحسب القدرة التنفيذية.' }
+];
 let idx = 0;
 let sending = false;
 
@@ -632,64 +680,88 @@ function renderInfo(){
   <button class="btn-back" onclick="prev()">رجوع</button>`;
 }
 
-function renderMultiYear(q){
-  const rows = YEARS.map(function(yr,i){
+/* صفوف السنوات الثلاث داخل قسم واحد */
+function yrRows(keys, unit, label){
+  return YEARS.map(function(yr,i){
+    const k = keys[i];
     return `
-    <div class="yr-item">
-      <span class="yr-tag">${yr}</span>
-      <div class="yr-divider"></div>
-      <input class="yr-val" type="text" inputmode="decimal" autocomplete="off" aria-label="${esc(yr)}"
-        placeholder="0" value="${esc(D[q.keys[i]]||'')}"
-        oninput="onNum('${q.keys[i]}',this)">
-      <span class="yr-unit">${esc(q.unit)}</span>
-    </div>`;
+      <div class="yr-item" id="w-${k}">
+        <span class="yr-tag">${yr}</span>
+        <div class="yr-divider"></div>
+        <input class="yr-val it-inp" id="in-${k}" type="text" inputmode="decimal" autocomplete="off"
+          aria-label="${esc(label + ' — ' + yr)}" placeholder="0" value="${esc(D[k]||'')}"
+          oninput="onNum('${k}',this)">
+        <span class="yr-unit">${esc(unit)}</span>
+      </div>`;
   }).join('');
-  return `
-  <div class="eyebrow">${esc(q.eyebrow)}</div>
-  <div class="qnum-accent">${q.qi+1}</div>
-  <h1 class="scr-title">${esc(q.title)}</h1>
-  <p class="scr-sub tight">${esc(q.sub||'')}</p>
-  <div class="yr-list" style="margin-bottom:1.5rem">${rows}</div>
-  <div class="err-msg" id="err-q">أدخل قيمة رقمية لكل سنة — واكتب 0 إن لم يوجد.</div>
-  <button class="btn-primary" onclick="next()">التالي</button>
-  <button class="btn-back" onclick="prev()">رجوع</button>`;
 }
 
-function renderText(q){
-  const v = cleanText(D[q.key]||'', CONFIG.MAX_TEXT);
+/* ترويسة قسم: رقم + عنوان + وحدة القياس */
+function secHead(m){
   return `
-  <div class="eyebrow">${esc(q.eyebrow)}</div>
-  <div class="qnum-accent">${q.qi+1}</div>
-  <h1 class="scr-title">${esc(q.title)}</h1>
-  <p class="scr-sub tight">اكتب المواصفة كما تتعاملون بها فعليًا — واكتب «لا يوجد» إن لم تنفذوا هذا البند.</p>
-  <div class="ta-wrap">
-    <textarea class="ta" id="ta" maxlength="${CONFIG.MAX_TEXT}" placeholder="${esc(q.ph)}"
-      oninput="onText('${q.key}',this)">${esc(v)}</textarea>
-    <div class="ta-foot" id="tafoot">
-      <span>ماركات، مقاسات، ضمان</span>
-      <span id="tacount" dir="ltr">${v.length} / ${CONFIG.MAX_TEXT}</span>
-    </div>
-  </div>
-  <div class="err-msg" id="err-q">اكتب المواصفات — حرفان على الأقل — للمتابعة.</div>
-  <button class="btn-primary" onclick="next()">التالي</button>
-  <button class="btn-back" onclick="prev()">رجوع</button>`;
+      <div class="sec-h">
+        <span class="sec-n">${m.n}</span>
+        <h2 class="sec-t">${esc(m.t)}</h2>
+      </div>
+      <p class="sec-d">${esc(m.d)}</p>`;
 }
 
-function renderNumber(q){
+/* شاشة البند الكاملة — أقسامه الأربعة في صفحة واحدة */
+function renderItem(q){
+  const it   = ITEMS[q.ii];
+  const spec = cleanText(D[q.k2]||'', CONFIG.MAX_TEXT);
+  const last = (q.ii + 1 === ITEMS.length);
   return `
-  <div class="eyebrow">${esc(q.eyebrow)}</div>
-  <div class="qnum-accent">${q.qi+1}</div>
-  <h1 class="scr-title">${esc(q.title)}</h1>
-  <p class="scr-sub tight">رقم واقعي بحسب التمويل والقدرة التنفيذية.</p>
-  <div class="num-field">
-    <input class="num-inp" id="single" type="text" inputmode="decimal" autocomplete="off"
-      placeholder="أدخل الكمية المستهدفة" value="${esc(D[q.key]||'')}"
-      oninput="onNum('${q.key}',this)">
-    <span class="num-unit">${esc(q.unit)}</span>
+  <div class="eyebrow">البند ${q.ii+1} من ${ITEMS.length}</div>
+  <h1 class="scr-title item-title">${esc(it.name)}</h1>
+
+  <div class="sec-grid">
+
+    <section class="sec s-qty">
+      ${secHead(SECS[0])}
+      <div class="yr-list">${yrRows(q.k1, it.unit, it.q1)}</div>
+      <div class="err-msg" id="err-qty">أدخل الكمية المنجزة لكل سنة — واكتب 0 إن لم يوجد.</div>
+    </section>
+
+    <section class="sec s-cost">
+      ${secHead(SECS[1])}
+      <div class="yr-list">${yrRows(q.k3, 'ريال', it.q3)}</div>
+      <div class="err-msg" id="err-cost">أدخل التكلفة المدفوعة لكل سنة — واكتب 0 إن لم يوجد.</div>
+    </section>
+
+    <section class="sec s-spec">
+      ${secHead(SECS[2])}
+      <div class="ta-wrap" id="w-spec">
+        <textarea class="ta" id="ta" maxlength="${CONFIG.MAX_TEXT}" aria-label="${esc(it.q2)}"
+          placeholder="${esc(it.q2ph)}" oninput="onText('${q.k2}',this)">${esc(spec)}</textarea>
+        <div class="ta-foot" id="tafoot">
+          <span>ماركات، مقاسات، ضمان</span>
+          <span id="tacount" dir="ltr">${spec.length} / ${CONFIG.MAX_TEXT}</span>
+        </div>
+      </div>
+      <div class="err-msg" id="err-spec">اكتب المواصفات — حرفان على الأقل — للمتابعة.</div>
+    </section>
+
+    <section class="sec s-target">
+      ${secHead(SECS[3])}
+      <div class="t-body">
+        <div class="num-field" id="w-${q.k4}">
+          <input class="num-inp it-inp" id="in-${q.k4}" type="text" inputmode="decimal" autocomplete="off"
+            aria-label="${esc(it.q4)}" placeholder="الكمية المستهدفة" value="${esc(D[q.k4]||'')}"
+            oninput="onNum('${q.k4}',this)">
+          <span class="num-unit">${esc(it.unit)}</span>
+        </div>
+        <p class="t-note">إن لم يكن لديكم مستهدف لهذا البند خلال 2026 اكتب 0.</p>
+        <div class="err-msg" id="err-target">أدخل الكمية المستهدفة — واكتب 0 إن لم يوجد مستهدف.</div>
+      </div>
+    </section>
+
   </div>
-  <div class="err-msg" id="err-q">أدخل قيمة رقمية للمتابعة — واكتب 0 إن لم يوجد مستهدف.</div>
-  <button class="btn-primary" onclick="next()">التالي</button>
-  <button class="btn-back" onclick="prev()">رجوع</button>`;
+
+  <div class="item-actions">
+    <button class="btn-primary" onclick="next()">${last ? 'التالي — المراجعة' : 'التالي — البند ' + (q.ii+2)}</button>
+    <button class="btn-back" onclick="prev()">رجوع</button>
+  </div>`;
 }
 
 function renderReview(){
@@ -703,7 +775,7 @@ function renderReview(){
     </div>`;
 
   ITEMS.forEach(function(it,ii){
-    const base = FIRST_Q + ii*4;
+    const base = FIRST_Q + ii;
     const qk = YEARS.map(function(y){ return K(it,'q1',y); });
     const ck = YEARS.map(function(y){ return K(it,'q3',y); });
     html += `<div class="rev-group"><div class="rev-h">${esc(it.name)}</div>`;
@@ -755,14 +827,12 @@ function renderDone(){
 
 function render(q){
   let h = '';
-  if(q.type==='terms')      h = renderTerms();
-  if(q.type==='info')       h = renderInfo();
-  if(q.type==='multi-year') h = renderMultiYear(q);
-  if(q.type==='text')       h = renderText(q);
-  if(q.type==='number')     h = renderNumber(q);
-  if(q.type==='review')     h = renderReview();
-  if(q.type==='done')       h = renderDone();
-  return '<div>' + h + '</div>';
+  if(q.type==='terms')  h = renderTerms();
+  if(q.type==='info')   h = renderInfo();
+  if(q.type==='item')   h = renderItem(q);
+  if(q.type==='review') h = renderReview();
+  if(q.type==='done')   h = renderDone();
+  return '<div class="' + (q.type==='item' ? 'wide' : '') + '">' + h + '</div>';
 }
 
 /* ═══════════ معالجات الإدخال — تنقية فورية ═══════════ */
@@ -782,9 +852,9 @@ function onText(key, el){
   const clean = cleanText(el.value, CONFIG.MAX_TEXT);
   if(el.value !== clean) el.value = clean;
   D[key] = clean;
-  const c = $('tacount');
+  const c = $a('tacount');
   if(c) c.textContent = clean.length + ' / ' + CONFIG.MAX_TEXT;
-  const f = $('tafoot');
+  const f = $a('tafoot');
   if(f) f.classList.toggle('over', clean.length >= CONFIG.MAX_TEXT);
   hideErr();
   autosave();
@@ -841,20 +911,52 @@ function validate(q){
     return null;
   }
 
-  if(q.type === 'multi-year')
-    return q.keys.every(function(k){ return hasVal(D[k]); }) ? null : 'err-q';
-
-  if(q.type === 'text')
-    return cleanText(D[q.key]||'', CONFIG.MAX_TEXT).trim().length >= 2 ? null : 'err-q';
-
-  if(q.type === 'number')
-    return hasVal(D[q.key]) ? null : 'err-q';
+  if(q.type === 'item') return validateItem(q);
 
   return null;
 }
 
+/* يفحص مجموعة حقول رقمية ويؤشّر على الناقص منها — يعيد أول حقل ناقص */
+function markNums(keys, errId){
+  let firstBad = null;
+  keys.forEach(function(k){
+    const ok = hasVal(D[k]);
+    const w  = $a('w-'+k);
+    if(w) w.classList.toggle('bad', !ok);
+    if(!ok && !firstBad) firstBad = $a('in-'+k);
+  });
+  const bad = keys.some(function(k){ return !hasVal(D[k]); });
+  const e = $a(errId);
+  if(e) e.classList.toggle('on', bad);
+  return bad ? { err:errId, el:firstBad } : null;
+}
+
+/* التحقّق من البند كاملاً — يؤشّر على كل قسم ناقص ويعيد أوّلها */
+function validateItem(q){
+  const probs = [];
+
+  const p1 = markNums(q.k1, 'err-qty');   if(p1) probs.push(p1);
+  const p2 = markNums(q.k3, 'err-cost');  if(p2) probs.push(p2);
+
+  const okSpec = cleanText(D[q.k2]||'', CONFIG.MAX_TEXT).trim().length >= 2;
+  const ws = $a('w-spec');   if(ws) ws.classList.toggle('bad', !okSpec);
+  const es = $a('err-spec'); if(es) es.classList.toggle('on', !okSpec);
+  if(!okSpec) probs.push({ err:'err-spec', el:$a('ta') });
+
+  const p4 = markNums([q.k4], 'err-target'); if(p4) probs.push(p4);
+
+  if(!probs.length) return null;
+
+  const first = probs[0];
+  if(first.el){
+    try{ first.el.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){}
+    try{ first.el.focus({ preventScroll:true }); }catch(e){ first.el.focus(); }
+  }
+  return first.err;
+}
+
 function showErr(id){
-  const el = $(id);
+  const el = $a(id);
   if(el) el.classList.add('on');
   const stage = $('stage');
   stage.style.animation = 'none';
@@ -866,6 +968,8 @@ function hideErr(){
   if(!stage) return;
   const list = stage.querySelectorAll('.err-msg.on');
   for(let i=0;i<list.length;i++) list[i].classList.remove('on');
+  const bads = stage.querySelectorAll('.yr-item.bad,.num-field.bad,.ta-wrap.bad');
+  for(let j=0;j<bads.length;j++) bads[j].classList.remove('bad');
 }
 
 /* ═══════════ التنقّل ═══════════ */
@@ -924,11 +1028,16 @@ function doNavigate(dir){
 function focusFirst(){
   const q = SCREENS[idx];
   let el = null;
-  if(q.type === 'info')        el = $('f-name');
-  else if(q.type === 'text')   el = $('ta');
-  else if(q.type === 'number') el = $('single');
-  else if(q.type === 'multi-year') el = document.querySelector('.yr-val');
+  if(q.type === 'info')      el = $('f-name');
+  else if(q.type === 'item') el = itemInputs()[0] || null;
   if(el && window.matchMedia('(min-width:700px)').matches) el.focus();
+}
+
+/* حقول البند الرقمية بالترتيب — للتنقّل بمفتاح Enter */
+function itemInputs(){
+  const st = $('stage');
+  const sc = st ? st.querySelector('.screen.active') : null;
+  return sc ? Array.prototype.slice.call(sc.querySelectorAll('.it-inp')) : [];
 }
 
 function updateChrome(){
@@ -938,8 +1047,9 @@ function updateChrome(){
   if(q.type === 'info')        lbl = 'التجهيز';
   else if(q.type === 'review') lbl = 'مراجعة';
   else if(q.type === 'done')   lbl = 'مكتمل';
-  else if(q.ii !== undefined)  lbl = 'بند ' + (q.ii+1) + '/6 · سؤال ' + (q.qi+1) + '/4';
+  else if(q.type === 'item')   lbl = 'بند ' + (q.ii+1) + ' من ' + ITEMS.length;
   $('steplbl').textContent = lbl;
+  document.body.classList.toggle('wide', q.type === 'item');
 }
 
 /* ═══════════ الإرسال إلى Google Sheet ═══════════ */
@@ -1161,6 +1271,12 @@ document.addEventListener('keydown', function(e){
   const t = e.target;
   if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
   e.preventDefault();
+  /* داخل شاشة البند: Enter ينقل إلى الحقل التالي، وفي آخر حقل ينتقل للبند التالي */
+  if(SCREENS[idx] && SCREENS[idx].type === 'item' && t && t.tagName === 'INPUT'){
+    const list = itemInputs();
+    const i = list.indexOf(t);
+    if(i > -1 && i < list.length - 1){ list[i+1].focus(); return; }
+  }
   next();
 });
 
@@ -1175,6 +1291,18 @@ document.addEventListener('visibilitychange', function(){
   let theme = 'light';
   try{ theme = localStorage.getItem('yamur_theme') || 'light'; }catch(e){}
   document.documentElement.setAttribute('data-theme', theme);
+
+  /* ترحيل: كان لكل بند 4 شاشات، والآن شاشة واحدة — نُعيد حساب موضع الاستئناف */
+  if(D._sv !== SCREEN_VER){
+    const old = parseInt(D._idx, 10);
+    if(isFinite(old) && old >= FIRST_Q){
+      const oi = old - FIRST_Q;
+      D._idx = (oi >= ITEMS.length * 4)
+        ? FIRST_Q + ITEMS.length                       /* المراجعة */
+        : FIRST_Q + Math.floor(oi / 4);                /* البند نفسه */
+    }
+    D._sv = SCREEN_VER;
+  }
 
   let resumed = false;
   if(D.submitted){
@@ -1194,6 +1322,7 @@ document.addEventListener('visibilitychange', function(){
   sc.classList.add('screen','active');
   stage.appendChild(sc);
   updateChrome();
+  focusFirst();
 
   if(resumed){
     flashSaved('تم استعادة إجاباتك');
