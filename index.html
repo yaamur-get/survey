@@ -155,7 +155,7 @@ body.wide .topbar{max-width:58rem;}
   transition:box-shadow .18s,border-color .18s;
 }
 .yr-item:focus-within{border-color:var(--grn);box-shadow:0 0 0 3px var(--ring);}
-.yr-item.bad,.num-field.bad,.ta-wrap.bad,.pr-in.bad{border-color:var(--err);}
+.yr-item.bad,.num-field.bad,.ta-wrap.bad,.pr-in.bad,.sup-wrap.bad{border-color:var(--err);}
 .yr-tag{font-size:.76rem;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;}
 .yr-divider{height:1.125rem;width:1px;background:var(--bd2);}
 .yr-val{
@@ -217,6 +217,18 @@ body.wide .topbar{max-width:58rem;}
 }
 .num-inp::placeholder{color:var(--tx3);font-weight:400;font-size:.95rem;}
 .num-unit{font-size:.76rem;font-weight:600;color:var(--tx3);}
+
+/* ─── حقل الموردين والمقاولين — سطر واحد ─── */
+.sup-wrap{
+  background:var(--inp);border:1px solid var(--bdi);border-radius:.65rem;
+  padding:.72rem .95rem;transition:box-shadow .18s,border-color .18s;
+}
+.sup-wrap:focus-within{border-color:var(--grn);box-shadow:0 0 0 3px var(--ring);}
+.sup-inp{
+  background:transparent;border:none;outline:none;width:100%;
+  font-size:.95rem;color:var(--tx);font-family:var(--font);
+}
+.sup-inp::placeholder{color:var(--tx3);}
 
 /* ─── حقل نصي (المواصفات) ─── */
 .ta-wrap{
@@ -432,6 +444,7 @@ const CONFIG = {
   // كلمة سرية مشتركة — يجب أن تكون مطابقة تماماً لما في ملف Apps Script
   SECRET: 'YAAMUR-2026-data8',
   MAX_TEXT: 400,
+  MAX_SUPP: 200,
   MAX_NUM_DIGITS: 12
 };
 
@@ -490,6 +503,14 @@ const ITEMS = [
 
 const YEARS = ['2023','2024','2025'];
 
+/* سؤال الموردين — نص واحد لكل البنود */
+const SUPP = {
+  t : 'من أبرز الموردين أو المقاولين الذين تعاملتم معهم في هذا البند؟',
+  d : 'اكتب الأسماء مفصولة بفاصلة — واكتب «لا يوجد» إن لم تتوفر.',
+  ph: 'مثال: مؤسسة النور للمقاولات، شركة الخليج للتوريد',
+  col: 'أبرز الموردين والمقاولين'
+};
+
 /* ═══════════ التخزين والحفظ التلقائي ═══════════ */
 const STORE_KEY = 'yamur_survey_v4';
 let D = {};
@@ -541,7 +562,6 @@ function wipeAndReload(){
    الاستجابة المُرسلة محفوظة في سجل الاتحاد، فمسح الجهاز آمن، ويُولَّد
    رقم مرجعي جديد عند إعادة التحميل فتُسجَّل استجابة مستقلة. */
 function startNew(){
-  if(!confirm('سيبدأ استبيان جديد فارغ لجمعية أخرى. استجابتك الحالية محفوظة في سجل الاتحاد ويبقى رقمها المرجعي في سجل هذا الجهاز. هل تريد المتابعة؟')) return;
   wipeAndReload();
 }
 
@@ -699,6 +719,7 @@ ITEMS.forEach(function(it,ii){
     g1:yrKeys(it,'q1'),        k1:flat(yrKeys(it,'q1')),   /* الكمية المنجزة */
     k2:K(it,'q2'),                                         /* المواصفات */
     g3:yrKeys(it,'q3'),        k3:flat(yrKeys(it,'q3')),   /* التكلفة المدفوعة */
+    k5:K(it,'q5'),                                         /* الموردون والمقاولون */
     k4:tgtKeys(it)                                         /* مستهدف 2026 */
   });
 });
@@ -714,8 +735,9 @@ const SCREEN_VER = 2;
 const SECS = [
   { n:1, t:'الكمية المنجزة فعليًا', d:'المُنجز والمُسلَّم فعليًا — اكتب 0 إن لم يوجد.' },
   { n:2, t:'التكلفة المدفوعة',      d:'المبلغ المدفوع شاملاً التوريد والتركيب.' },
-  { n:3, t:'المواصفات المعتمدة',    d:'اكتب «لا يوجد» في حال لم يكن هناك مواصفات معتمدة.' },
-  { n:4, t:'المستهدف خلال 2026',    d:'رقم واقعي بحسب القدرة التنفيذية.' }
+  { n:3, t:SUPP.t,                  d:SUPP.d },
+  { n:4, t:'المواصفات المعتمدة',    d:'اكتب «لا يوجد» في حال لم يكن هناك مواصفات معتمدة.' },
+  { n:5, t:'المستهدف خلال 2026',    d:'رقم واقعي بحسب القدرة التنفيذية.' }
 ];
 let idx = 0;
 let sending = false;
@@ -870,6 +892,7 @@ function tgtField(it, keys){
 function renderItem(q){
   const it   = ITEMS[q.ii];
   const spec = cleanText(D[q.k2]||'', CONFIG.MAX_TEXT);
+  const supp = cleanText(D[q.k5]||'', CONFIG.MAX_SUPP);
   const last = (q.ii + 1 === ITEMS.length);
   return `
   <div class="eyebrow">البند ${q.ii+1} من ${ITEMS.length}</div>
@@ -889,8 +912,18 @@ function renderItem(q){
       <div class="err-msg" id="err-cost">أدخل التكلفة المدفوعة لكل ${it.parts ? 'مكوّن في كل سنة' : 'سنة'} — واكتب 0 إن لم يوجد.</div>
     </section>
 
-    <section class="sec s-spec">
+    <section class="sec s-supp">
       ${secHead(SECS[2])}
+      <div class="sup-wrap" id="w-supp">
+        <input class="sup-inp" id="in-supp" type="text" maxlength="${CONFIG.MAX_SUPP}" autocomplete="off"
+          aria-label="${esc(SUPP.t)}" placeholder="${esc(SUPP.ph)}" value="${esc(supp)}"
+          oninput="onLine('${q.k5}',this,${CONFIG.MAX_SUPP})">
+      </div>
+      <div class="err-msg" id="err-supp">اكتب اسم مورد أو مقاول واحد على الأقل — أو «لا يوجد».</div>
+    </section>
+
+    <section class="sec s-spec">
+      ${secHead(SECS[3])}
       <div class="ta-wrap" id="w-spec">
         <textarea class="ta" id="ta" maxlength="${CONFIG.MAX_TEXT}" aria-label="${esc(it.q2)}"
           placeholder="${esc(it.q2ph)}" oninput="onText('${q.k2}',this)">${esc(spec)}</textarea>
@@ -903,7 +936,7 @@ function renderItem(q){
     </section>
 
     <section class="sec s-target">
-      ${secHead(SECS[3])}
+      ${secHead(SECS[4])}
       <div class="t-body">
         ${tgtField(it, q.k4)}
         <p class="t-note">إن لم يكن لديكم مستهدف لهذا البند خلال 2026 اكتب 0.</p>
@@ -958,6 +991,8 @@ function renderReview(){
     const ck = yrKeys(it,'q3');
     html += `<div class="rev-group"><div class="rev-h">${esc(it.name)}</div>`;
     html += revRows(it, qk, 'منجز', '');
+    html += `<div class="rev-row"><span class="rev-k">الموردون والمقاولون</span>
+      <span class="rev-v txt">${esc(cleanText(D[K(it,'q5')]||'—', CONFIG.MAX_SUPP))}</span></div>`;
     html += `<div class="rev-row"><span class="rev-k">المواصفات</span>
       <span class="rev-v txt">${esc(cleanText(D[K(it,'q2')]||'—', CONFIG.MAX_TEXT))}</span></div>`;
     html += revRows(it, ck, 'تكلفة', 'ريال');
@@ -1049,6 +1084,15 @@ function onText(key, el){
   autosave();
 }
 
+/* حقل نصي من سطر واحد بلا عدّاد — الموردون والمقاولون */
+function onLine(key, el, max){
+  const clean = cleanText(el.value, max || CONFIG.MAX_TEXT);
+  if(el.value !== clean) el.value = clean;
+  D[key] = clean;
+  hideErr();
+  autosave();
+}
+
 function onInfo(key, el){
   const clean = (key === 'tel')
     ? normDigits(el.value).replace(/[^0-9+]/g,'')
@@ -1127,6 +1171,11 @@ function validateItem(q){
   const p1 = markNums(q.k1, 'err-qty');   if(p1) probs.push(p1);
   const p2 = markNums(q.k3, 'err-cost');  if(p2) probs.push(p2);
 
+  const okSupp = cleanText(D[q.k5]||'', CONFIG.MAX_SUPP).trim().length >= 2;
+  const wp = $a('w-supp');   if(wp) wp.classList.toggle('bad', !okSupp);
+  const ep = $a('err-supp'); if(ep) ep.classList.toggle('on', !okSupp);
+  if(!okSupp) probs.push({ err:'err-supp', el:$a('in-supp') });
+
   const okSpec = cleanText(D[q.k2]||'', CONFIG.MAX_TEXT).trim().length >= 2;
   const ws = $a('w-spec');   if(ws) ws.classList.toggle('bad', !okSpec);
   const es = $a('err-spec'); if(es) es.classList.toggle('on', !okSpec);
@@ -1157,7 +1206,7 @@ function hideErr(){
   if(!stage) return;
   const list = stage.querySelectorAll('.err-msg.on');
   for(let i=0;i<list.length;i++) list[i].classList.remove('on');
-  const bads = stage.querySelectorAll('.yr-item.bad,.num-field.bad,.ta-wrap.bad,.pr-in.bad');
+  const bads = stage.querySelectorAll('.yr-item.bad,.num-field.bad,.ta-wrap.bad,.pr-in.bad,.sup-wrap.bad');
   for(let j=0;j<bads.length;j++) bads[j].classList.remove('bad');
 }
 
@@ -1262,6 +1311,10 @@ function buildHeaders(){
       h.push(it.name + ' - ' + pt.name + ' - مستهدف 2026 (' + pt.unit + ')');
     });
   });
+  /* أعمدة الموردين تُضاف في آخر الجدول لا داخل كتلة كل بند: سكربت الشيت
+     يُلحق الأعمدة الجديدة في النهاية فقط، فلو أُقحمت في المنتصف لانزاحت
+     أعمدة الاستجابات المحفوظة سابقاً عن عناوينها. */
+  ITEMS.forEach(function(it){ h.push(it.name + ' - ' + SUPP.col); });
   return h;
 }
 
@@ -1279,6 +1332,10 @@ function buildValues(){
     flat(yrKeys(it,'q3')).forEach(function(k){ v.push(toNum(D[k])); });
     tgtKeys(it).forEach(function(k){ v.push(toNum(D[k])); });
   });
+  /* بنفس ترتيب buildHeaders — الموردون في آخر الأعمدة */
+  ITEMS.forEach(function(it){
+    v.push(safeCell(cleanText(D[K(it,'q5')]||'', CONFIG.MAX_SUPP).trim()));
+  });
   return v;
 }
 
@@ -1295,6 +1352,7 @@ function finalCheck(){
     flat(yrKeys(it,'q3')).forEach(function(k){ if(!hasVal(D[k])) miss = true; });
     tgtKeys(it).forEach(function(k){ if(!hasVal(D[k])) miss = true; });
     if(cleanText(D[K(it,'q2')]||'', CONFIG.MAX_TEXT).trim().length < 2) miss = true;
+    if(cleanText(D[K(it,'q5')]||'', CONFIG.MAX_SUPP).trim().length < 2) miss = true;
     if(miss) problems.push('البند ' + (ii+1) + ' — ' + it.name);
   });
   return problems;
