@@ -308,6 +308,22 @@ body.wide .topbar{max-width:58rem;}
 }
 .ref-box b{display:block;font-size:1rem;color:var(--grn);font-weight:700;
   font-variant-numeric:tabular-nums;letter-spacing:.04em;margin-top:.2rem;direction:ltr;}
+.done-note{font-size:.72rem;color:var(--tx3);line-height:1.6;margin-top:.55rem;}
+.sent-log{
+  border:1.5px solid var(--bd);border-radius:.7rem;padding:.75rem .9rem;
+  margin-top:.9rem;text-align:start;
+}
+.sent-log-h{display:block;font-size:.72rem;color:var(--tx3);margin-bottom:.45rem;}
+.sent-log-row{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  font-size:.76rem;color:var(--tx2);padding:.28rem 0;border-top:1px solid var(--bd);
+}
+.sent-log-row:first-of-type{border-top:none;}
+.sent-log-row b{
+  color:var(--tx);font-weight:600;font-variant-numeric:tabular-nums;
+  letter-spacing:.03em;direction:ltr;flex:none;
+}
+.sent-log-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* ─── استئناف ─── */
 .resume-box{
@@ -522,7 +538,12 @@ function wipeAndReload(){
 }
 
 /* بدء استجابة جديدة بعد إرسال ناجح — للأجهزة المشتركة بين عدة جمعيات.
-   الاستجابة المُرسلة محفوظة في سجل الاتحاد، فمسح الجهاز آمن. */
+   الاستجابة المُرسلة محفوظة في سجل الاتحاد، فمسح الجهاز آمن، ويُولَّد
+   رقم مرجعي جديد عند إعادة التحميل فتُسجَّل استجابة مستقلة. */
+function startNew(){
+  if(!confirm('سيبدأ استبيان جديد فارغ لجمعية أخرى. استجابتك الحالية محفوظة في سجل الاتحاد ويبقى رقمها المرجعي في سجل هذا الجهاز. هل تريد المتابعة؟')) return;
+  wipeAndReload();
+}
 
 /* ═══════════ رقم مرجعي فريد للاستجابة ═══════════ */
 function makeRef(){
@@ -537,6 +558,28 @@ function makeRef(){
   }
 }
 if(!D._ref) D._ref = makeRef();
+
+/* ═══════════ سجل الاستجابات المُرسلة من هذا الجهاز ═══════════
+   مفتاح مستقل عن STORE_KEY حتى تبقى الأرقام المرجعية بعد مسح
+   الاستبيان الحالي للبدء باستبيان جديد. */
+const SENT_KEY = 'yamur_sent_v1';
+function readSent(){
+  try{
+    const a = JSON.parse(localStorage.getItem(SENT_KEY) || '[]');
+    return Array.isArray(a) ? a : [];
+  }catch(e){ return []; }
+}
+function recordSent(){
+  try{
+    const a = readSent().filter(function(r){ return r && r.ref !== D._ref; });
+    a.push({
+      ref:  D._ref,
+      name: cleanText(D.name || '', 120).trim(),
+      at:   new Date().toISOString()
+    });
+    localStorage.setItem(SENT_KEY, JSON.stringify(a.slice(-50)));
+  }catch(e){ /* التخزين ممتلئ أو محظور — لا يمنع ذلك الإرسال */ }
+}
 
 /* ═══════════ أدوات ═══════════ */
 function $(id){ return document.getElementById(id); }
@@ -938,6 +981,20 @@ function renderReview(){
 }
 
 function renderDone(){
+  /* الاستجابات السابقة من الجهاز نفسه — تُعرض حتى لا تُفقد أرقامها
+     المرجعية عند البدء باستبيان جديد. */
+  const prev = readSent().filter(function(r){ return r && r.ref && r.ref !== D._ref; });
+  let log = '';
+  if(prev.length){
+    log = '<div class="sent-log"><span class="sent-log-h">استجابات سابقة أُرسلت من هذا الجهاز ('
+        + prev.length + ')</span>'
+        + prev.slice().reverse().map(function(r){
+            return '<div class="sent-log-row"><span>' + esc(r.name || '—') + '</span><b>'
+                 + esc(r.ref) + '</b></div>';
+          }).join('')
+        + '</div>';
+  }
+
   return `
   <div class="done-wrap">
     <div class="done-mark">
@@ -951,6 +1008,9 @@ function renderDone(){
       حُفظت بياناتكم بنجاح في سجل الاتحاد، وسيتواصل معكم فريق مجلس الجمعيات الأهلية بالشرقية عند الحاجة.
     </p>
     <div class="ref-box">الرقم المرجعي لاستجابتكم<b>${esc(D._ref)}</b></div>
+    ${log}
+    <button class="btn-primary" style="margin-top:1.4rem" onclick="startNew()">إرسال استبيان جديد</button>
+    <p class="done-note">للجهاز الواحد أن يرسل أكثر من استبيان — كل استجابة تُسجَّل برقم مرجعي مستقل.</p>
   </div>`;
 }
 
@@ -1319,6 +1379,7 @@ function submitAll(){
       if(res && res.ok === true){
         if(res.backup === false && window.console)
           console.warn('تم الحفظ في الجدول، لكن النسخة الاحتياطية فشلت:', res.backupWarning);
+        recordSent();
         D.submitted = true;
         D.row = res.row || '';
         persist(true);
