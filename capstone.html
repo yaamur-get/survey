@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#08704C">
+<meta name="description" content="نموذج مشاريع التخرج — جمعية يعمر للعناية بالمساجد">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<title>مشاريع التخرج — جمعية يعمر للعناية بالمساجد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Almarai صار احتياطاً فقط (محارف قليلة + تعذّر تحميل الخط الرسمي)،
+     فيُحمَّل دون أن يحجب أول رسم للصفحة — مهم على شبكة المعرض -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+      media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
+<link rel="stylesheet" href="assets/yaamur.css">
+</head>
+<body>
+
+<div class="crest" aria-hidden="true"></div>
+<div class="pline"><div class="pfill" id="pfill" style="width:0%"></div></div>
+
+<div class="shell">
+  <div class="topbar">
+    <img class="logo logo-light" src="assets/yaamur-logo.png" alt="جمعية يعمر للعناية بالمساجد">
+    <img class="logo logo-dark"  src="assets/yaamur-logo-white.png" alt="جمعية يعمر للعناية بالمساجد">
+    <div class="bar-right">
+      <span class="saved" id="savedlbl">✓ محفوظ على جهازك</span>
+      <span class="step-lbl" id="steplbl"></span>
+      <button class="icon-btn" data-act="theme" title="تبديل المظهر" aria-label="تبديل المظهر">◑</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stage-wrap" id="stage"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   نموذج ②: مشاريع التخرج
+   المعرض التطوعي — جامعة الملك فهد للبترول والمعادن
+   ═══════════════════════════════════════════════════════════ */
+
+var MAJORS = [
+  'هندسة ميكانيكية','هندسة كهربائية','هندسة مدنية','هندسة كيميائية','هندسة صناعية ونظم',
+  'هندسة البترول','هندسة الحاسب','هندسة العمارة','الهندسة البيئية','إدارة التشييد',
+  'علوم الحاسب','هندسة البرمجيات','الأمن السيبراني','علوم وهندسة البيانات','الذكاء الاصطناعي',
+  'نظم المعلومات الإدارية','الرياضيات','الفيزياء','الكيمياء','علوم الأرض','الجيولوجيا',
+  'إدارة الأعمال','المالية','المحاسبة','التسويق','الاقتصاد','تخطيط المدن','التصميم'
+];
+
+var CONSENT = 'أوافق على استخدام بيانات التواصل للتواصل معي حول الفرص والمشاريع، '
+            + 'ومشاركة المبادرات والبرامج والأخبار ذات العلاقة بالجمعية.';
+
+window.YFORM = {
+  id:        'capstone',
+  title:     'مشاريع التخرج',
+  pageTitle: 'مشاريع التخرج — جمعية يعمر للعناية بالمساجد',
+  eyebrow:   'مشاريع التخرج',
+  sheet:     'مشاريع التخرج',
+  storeKey:  'yaamur_capstone_v1',
+  refPrefix: 'YP',
+  nameKey:   'studentName',
+
+  /* الصق هنا رابط النشر (Deployment URL) المنتهي بـ /exec */
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbyTZ97NEzF54jY_Tfj2MjlBZGRLGP1-hjRMhnVAHtGtCQ01fr8xSdndHwOXSRYkx_9uHA/exec',
+  /* يجب أن تطابق SECRET في ملف Apps Script تماماً */
+  secret:    'YAAMUR-KFUPM-2026',
+
+  intro: {
+    title: 'اربط مشروع تخرّجك بأثر حقيقي',
+    lede:  'تفتح <strong>جمعية يعمر للعناية بالمساجد</strong> ميدانها لفرق مشاريع التخرّج: '
+         + 'تحدّيات واقعية من المساجد، وبيانات، ومواقع للتجربة، ومرشدون فنّيون. '
+         + 'سجّل فريقك ونبحث معكم أقرب تحدٍّ لتخصّصكم.',
+    pointsTitle: 'قبل أن تبدأ',
+    points: [
+      '<b>يكفي أن يعبّئ النموذج عضو واحد</b> نيابةً عن الفريق.',
+      '<b>لا يلزم أن تكون لديكم فكرة جاهزة</b> — إن لم تكن، نقترح عليكم تحدياً من الميدان.',
+      '<b>إجاباتكم تُحفظ تلقائياً</b> على الجهاز، فلو أُغلقت الصفحة تكملون من حيث توقّفتم.'
+    ],
+    cta: 'ابدأ التسجيل'
+  },
+
+  steps: [
+    {
+      eyebrow: 'الخطوة ١ — بياناتك',
+      title:   'بيانات مُمثّل الفريق',
+      sub:     'الشخص الذي نتواصل معه بشأن المشروع.',
+      fields: [
+        { k:'studentName', t:'اسم الطالب', type:'text', vald:'name', max:120,
+          ac:'name', ph:'مثال: عبدالرحمن سعد القحطاني' },
+        { k:'tel', t:'رقم الجوال', type:'tel', vald:'tel', max:16,
+          ac:'tel', ph:'05xxxxxxxx' },
+        { k:'email', t:'البريد الإلكتروني', type:'email', vald:'email', max:100,
+          ac:'email', ph:'s202012345@kfupm.edu.sa' },
+        { k:'major', t:'التخصّص', type:'text', max:100, list:MAJORS,
+          ph:'ابدأ بالكتابة لاختيار تخصّصك',
+          hint:'اكتب تخصّصك حتى لو لم يظهر في القائمة.' }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٢ — الفريق',
+      title:   'فريق المشروع',
+      sub:     'حجم الفريق وتخصّصاته تحدّد نوع التحدّي المناسب.',
+      fields: [
+        { k:'teamCount', t:'عدد أعضاء الفريق', type:'number', min:1, max:20, unit:'عضو',
+          ph:'4', hint:'بمن فيهم أنت.' },
+        { k:'teamMajors', t:'تخصّصات أعضاء الفريق', type:'textarea', max:300,
+          ph:'مثال: هندسة ميكانيكية (٢)، هندسة كهربائية (١)، علوم حاسب (١)',
+          hint:'اذكر التخصّصات وعدد الأعضاء في كل تخصّص.' }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٣ — المشروع',
+      title:   'فكرة المشروع',
+      sub:     'إن لم تكن لديكم فكرة بعد، اختر «لا» وتابع — لدينا تحدّيات جاهزة.',
+      fields: [
+        { k:'hasIdea', t:'هل لديكم فكرة مشروع حالياً؟', type:'radio', opts:['نعم','لا'] },
+        { k:'ideaTitle', t:'عنوان الفكرة', type:'text', max:150,
+          ph:'مثال: نظام ذكي لترشيد استهلاك المياه في دورات المساجد',
+          showIf:function(D){ return D.hasIdea === 'نعم'; } },
+        { k:'ideaDesc', t:'وصف مختصر للفكرة', type:'textarea', max:600,
+          ph:'ما المشكلة التي تعالجونها؟ وما الحل المقترح باختصار؟',
+          showIf:function(D){ return D.hasIdea === 'نعم'; } },
+        { k:'projectArea', t:'مجال المشروع', type:'radio',
+          hint:'المجال الذي يقع فيه المشروع — أو الذي تميلون إليه إن لم تستقرّ الفكرة بعد.',
+          opts:['هندسي','تقني','طاقة','مياه','استدامة','بيانات','ذكاء اصطناعي','أخرى'],
+          other:true, otherLabel:'حدّد المجال الآخر', otherPh:'اكتب المجال الذي تقصده' },
+        { k:'stage', t:'المرحلة الحالية', type:'select',
+          opts:['لم نبدأ بعد','البحث عن فكرة','تحديد الفكرة والنطاق','مرحلة التصميم',
+                'مرحلة التنفيذ','الاختبار والتقييم','شبه مكتمل'] }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٤ — الأخيرة',
+      title:   'ما الذي تحتاجونه منّا؟',
+      sub:     'خطوة أخيرة ثم المراجعة والإرسال.',
+      fields: [
+        { k:'needs', t:'ما تحتاجونه من الجمعية', type:'checks',
+          hint:'يمكنكم اختيار أكثر من احتياج.',
+          opts:['بيانات وإحصاءات','مسجد أو موقع للتجربة','مشرف أو مرشد فنّي',
+                'دعم مالي أو تجهيزات','تحدٍّ واقعي من الميدان','خطاب تعاون رسمي',
+                'ربط بجهات ذات علاقة','أخرى'],
+          other:true, otherLabel:'حدّد الاحتياج الآخر', otherPh:'اكتب ما تحتاجونه' },
+        { k:'wantChallenge', t:'هل ترغبون في الحصول على تحدٍّ مقترح من الجمعية؟',
+          type:'radio', opts:['نعم','لا'] },
+        { k:'notes', t:'ملاحظات إضافية', type:'textarea', max:400, req:false,
+          ph:'أي شيء تودّون إخبارنا به — موعد تسليم المشروع، اسم المشرف الأكاديمي، سؤال…' },
+        { k:'consent', t:CONSENT, type:'consent', col:'الموافقة على التواصل' }
+      ]
+    }
+  ],
+
+  done: {
+    title: 'تم استلام تسجيل فريقكم',
+    sub:   'شكراً لاهتمامكم بالشراكة مع <strong>يعمر</strong>. '
+         + 'سنتواصل مع مُمثّل الفريق لمناقشة التحدّي المناسب وما نستطيع توفيره لكم.'
+  }
+};
+</script>
+<script src="assets/engine.js"></script>
+</body>
+</html>

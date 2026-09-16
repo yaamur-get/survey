@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#08704C">
+<meta name="description" content="نموذج تسجيل الفرص التطوعية — جمعية يعمر للعناية بالمساجد">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<title>الفرص التطوعية — جمعية يعمر للعناية بالمساجد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Almarai صار احتياطاً فقط (محارف قليلة + تعذّر تحميل الخط الرسمي)،
+     فيُحمَّل دون أن يحجب أول رسم للصفحة — مهم على شبكة المعرض -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+      media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
+<link rel="stylesheet" href="assets/yaamur.css">
+</head>
+<body>
+
+<div class="crest" aria-hidden="true"></div>
+<div class="pline"><div class="pfill" id="pfill" style="width:0%"></div></div>
+
+<div class="shell">
+  <div class="topbar">
+    <img class="logo logo-light" src="assets/yaamur-logo.png" alt="جمعية يعمر للعناية بالمساجد">
+    <img class="logo logo-dark"  src="assets/yaamur-logo-white.png" alt="جمعية يعمر للعناية بالمساجد">
+    <div class="bar-right">
+      <span class="saved" id="savedlbl">✓ محفوظ على جهازك</span>
+      <span class="step-lbl" id="steplbl"></span>
+      <button class="icon-btn" data-act="theme" title="تبديل المظهر" aria-label="تبديل المظهر">◑</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stage-wrap" id="stage"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   نموذج ①: الفرص التطوعية
+   المعرض التطوعي — جامعة الملك فهد للبترول والمعادن
+   ═══════════════════════════════════════════════════════════ */
+
+var MAJORS = [
+  'هندسة ميكانيكية','هندسة كهربائية','هندسة مدنية','هندسة كيميائية','هندسة صناعية ونظم',
+  'هندسة البترول','هندسة الحاسب','هندسة العمارة','الهندسة البيئية','إدارة التشييد',
+  'علوم الحاسب','هندسة البرمجيات','الأمن السيبراني','علوم وهندسة البيانات','الذكاء الاصطناعي',
+  'نظم المعلومات الإدارية','الرياضيات','الفيزياء','الكيمياء','علوم الأرض','الجيولوجيا',
+  'إدارة الأعمال','المالية','المحاسبة','التسويق','الاقتصاد','تخطيط المدن','التصميم'
+];
+
+var YEARS = [
+  'السنة التحضيرية','السنة الأولى','السنة الثانية','السنة الثالثة',
+  'السنة الرابعة','السنة الخامسة','خرّيج / خرّيجة'
+];
+
+var CONSENT = 'أوافق على استخدام بيانات التواصل للتواصل معي حول الفرص والمشاريع، '
+            + 'ومشاركة المبادرات والبرامج والأخبار ذات العلاقة بالجمعية.';
+
+window.YFORM = {
+  id:        'volunteer',
+  title:     'الفرص التطوعية',
+  pageTitle: 'الفرص التطوعية — جمعية يعمر للعناية بالمساجد',
+  eyebrow:   'الفرص التطوعية',
+  sheet:     'الفرص التطوعية',
+  storeKey:  'yaamur_volunteer_v1',
+  refPrefix: 'YV',
+  nameKey:   'fullName',
+
+  /* الصق هنا رابط النشر (Deployment URL) المنتهي بـ /exec */
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbyTZ97NEzF54jY_Tfj2MjlBZGRLGP1-hjRMhnVAHtGtCQ01fr8xSdndHwOXSRYkx_9uHA/exec',
+  /* يجب أن تطابق SECRET في ملف Apps Script تماماً */
+  secret:    'YAAMUR-KFUPM-2026',
+
+  intro: {
+    title: 'سجّل اهتمامك التطوعي',
+    lede:  'جمعية <strong>يعمر للعناية بالمساجد</strong> تبني قاعدة من المتطوعين المهرة '
+         + 'من طلبة جامعة الملك فهد للبترول والمعادن. سجّل بياناتك ومجالات اهتمامك، '
+         + 'ونتواصل معك عند توفّر فرصة تناسب تخصّصك.',
+    pointsTitle: 'قبل أن تبدأ',
+    points: [
+      '<b>الوقت المتوقّع:</b> أقل من دقيقتين — أربع خطوات قصيرة.',
+      '<b>إجاباتك تُحفظ تلقائياً</b> على جهازك، فلو أُغلقت الصفحة تكمل من حيث توقّفت.',
+      '<b>بياناتك لا تُشارك</b> مع أي جهة خارج الجمعية، وتُستخدم لغرض التطوّع فقط.'
+    ],
+    cta: 'ابدأ التسجيل'
+  },
+
+  steps: [
+    {
+      eyebrow: 'الخطوة ١ — بياناتك',
+      title:   'بيانات التواصل',
+      sub:     'نستخدمها للتواصل معك عند ترشيحك لفرصة تطوعية.',
+      fields: [
+        { k:'fullName', t:'الاسم الثلاثي', type:'text', vald:'name', max:120,
+          ac:'name', ph:'مثال: محمد عبدالله الزهراني' },
+        { k:'tel', t:'رقم الجوال', type:'tel', vald:'tel', max:16,
+          ac:'tel', ph:'05xxxxxxxx' },
+        { k:'email', t:'البريد الإلكتروني', type:'email', vald:'email', max:100,
+          ac:'email', ph:'s202012345@kfupm.edu.sa' }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٢ — الدراسة',
+      title:   'بياناتك الدراسية',
+      sub:     'تساعدنا في ترشيحك للفرص التي تناسب مسارك.',
+      fields: [
+        { k:'major', t:'التخصّص', type:'text', max:100, list:MAJORS,
+          ph:'ابدأ بالكتابة لاختيار تخصّصك',
+          hint:'اكتب تخصّصك حتى لو لم يظهر في القائمة.' },
+        { k:'year', t:'السنة الدراسية', type:'select', opts:YEARS }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٣ — اهتمامك',
+      title:   'مجال تطوّعك ومهاراتك',
+      sub:     'كلما كانت الإجابة أدقّ، كان الترشيح أنسب.',
+      fields: [
+        { k:'areas', t:'المجال التطوعي الذي يهمّك', type:'checks',
+          hint:'يمكنك اختيار أكثر من مجال.',
+          opts:['هندسي','تقني وبرمجي','تحليل بيانات','تسويق','إعلام وصناعة محتوى',
+                'تصميم','إدارة مشاريع','أعمال ميدانية','أخرى'],
+          other:true, otherLabel:'حدّد المجال الآخر', otherPh:'اكتب المجال الذي تقصده' },
+        { k:'skills', t:'مهاراتك', type:'textarea', max:400,
+          ph:'مثال: تصميم بالفوتوشوب، تحليل بيانات بـ Python، تنظيم الفعاليات، التصوير',
+          hint:'اذكر ما تتقنه فعلاً — البرامج والأدوات والخبرات العملية.' },
+        { k:'volType', t:'نوع التطوّع المفضّل', type:'radio',
+          opts:['ميداني','عن بُعد','كلاهما'] }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٤ — الأخيرة',
+      title:   'خبرتك السابقة',
+      sub:     'خطوة أخيرة ثم المراجعة والإرسال.',
+      fields: [
+        { k:'prevVol', t:'هل سبق لك التطوّع؟', type:'radio', opts:['نعم','لا'] },
+        { k:'prevWhere', t:'أين تطوّعت سابقاً؟', type:'text', max:200, req:false,
+          ph:'اسم الجهة أو المبادرة',
+          showIf:function(D){ return D.prevVol === 'نعم'; } },
+        { k:'notes', t:'ملاحظات إضافية', type:'textarea', max:400, req:false,
+          ph:'أي شيء تودّ إخبارنا به — أوقات فراغك، اهتمام خاص، سؤال…' },
+        { k:'consent', t:CONSENT, type:'consent', col:'الموافقة على التواصل' }
+      ]
+    }
+  ],
+
+  done: {
+    title: 'تم استلام تسجيلك',
+    sub:   'شكراً لاهتمامك بالتطوّع مع <strong>يعمر</strong>. '
+         + 'سنتواصل معك عند توفّر فرصة تناسب تخصّصك ومجال اهتمامك.'
+  }
+};
+</script>
+<script src="assets/engine.js"></script>
+</body>
+</html>
