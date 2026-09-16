@@ -96,11 +96,11 @@ window.YFORM = {
       sub:     'نستخدمها للتواصل معك عند ترشيحك لفرصة تطوعية.',
       fields: [
         { k:'fullName', t:'الاسم الثلاثي', type:'text', vald:'name', max:120,
-          ac:'name', ph:'مثال: محمد عبدالله الزهراني' },
+          ac:'name', ph:'مثال: محمد عبدالله' },
         { k:'tel', t:'رقم الجوال', type:'tel', vald:'tel', max:16,
           ac:'tel', ph:'05xxxxxxxx' },
         { k:'email', t:'البريد الإلكتروني', type:'email', vald:'email', max:100,
-          ac:'email', ph:'s202012345@kfupm.edu.sa' }
+          ac:'email', ph:'myemail@domine.sa' }
       ]
     },
     {
@@ -137,7 +137,7 @@ window.YFORM = {
       sub:     'خطوة أخيرة ثم المراجعة والإرسال.',
       fields: [
         { k:'prevVol', t:'هل سبق لك التطوّع؟', type:'radio', opts:['نعم','لا'] },
-        { k:'prevWhere', t:'أين تطوّعت سابقاً؟', type:'text', max:200, req:false,
+        { k:'prevWhere', t:'أين تطوّعت سابقاً؟', type:'text', max:200,
           ph:'اسم الجهة أو المبادرة',
           showIf:function(D){ return D.prevVol === 'نعم'; } },
         { k:'notes', t:'ملاحظات إضافية', type:'textarea', max:400, req:false,
