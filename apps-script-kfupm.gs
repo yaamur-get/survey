@@ -3,9 +3,10 @@
  *  جمعية يعمر للعناية بالمساجد — نماذج المعرض التطوعي
  *  جامعة الملك فهد للبترول والمعادن
  *
- *  خادم واحد يخدم النموذجين ويكتب كلاً منهما في ورقة مستقلة:
+ *  خادم واحد يخدم النماذج الثلاثة ويكتب كلاً منها في ورقة مستقلة:
  *      volunteer  →  ورقة «الفرص التطوعية»
  *      capstone   →  ورقة «مشاريع التخرج»
+ *      idea       →  ورقة «الأفكار»
  *
  *  كل استجابة تُحفظ في ثلاثة أماكن مستقلة:
  *    ① صف في ورقة النموذج                              (للعرض والتحليل)
@@ -21,7 +22,7 @@
  *  ٤) Deploy → New deployment → Type: Web app
  *        Execute as: Me   |   Who has access: Anyone      ← مهم جداً
  *  ٥) انسخ رابط النشر المنتهي بـ /exec والصقه في الحقل scriptUrl
- *     داخل الملفين volunteer.html و capstone.html (الرابط نفسه للاثنين)
+ *     داخل الملفات volunteer.html و capstone.html و idea.html (الرابط نفسه للثلاثة)
  *  ٦) للتأكّد: افتح الرابط في المتصفح — يجب أن يظهر {"ok":true,...}
  *
  *  أول استجابة سيطلب Google صلاحية Drive — اقبلها مرة واحدة،
@@ -33,7 +34,7 @@
 
 /* ══════════════════ الإعدادات ══════════════════ */
 
-/** يجب أن تطابق الحقل secret في volunteer.html و capstone.html.
+/** يجب أن تطابق الحقل secret في volunteer.html و capstone.html و idea.html.
  *  تحذير: هذه ليست كلمة سر حقيقية — من يفتح كود الصفحة يراها.
  *  وظيفتها منع الإرسال العابر فقط، لا حماية البيانات. */
 var SECRET = 'YAAMUR-KFUPM-2026';
@@ -44,7 +45,8 @@ var ADMIN_KEY = 'CHANGE-ME-LONG-RANDOM-ADMIN-ONLY';
 /** النماذج المسموح بها وأوراقها — لا يُكتب في ورقة خارج هذه القائمة. */
 var FORMS = {
   volunteer: { sheet: 'الفرص التطوعية', label: 'الفرص التطوعية', master: '_volunteer.json' },
-  capstone:  { sheet: 'مشاريع التخرج',  label: 'مشاريع التخرج',  master: '_capstone.json'  }
+  capstone:  { sheet: 'مشاريع التخرج',  label: 'مشاريع التخرج',  master: '_capstone.json'  },
+  idea:      { sheet: 'الأفكار',        label: 'إرسال فكرة',     master: '_idea.json'      }
 };
 
 var BACKUP_FOLDER = 'yaamur-kfupm-backup';
@@ -75,7 +77,7 @@ function doGet(e) {
       return reply({ ok: false, error: 'unauthorized' });
     }
     var id = String(p.form || '');
-    if (!FORMS[id]) return reply({ ok: false, error: 'form غير معروف. استخدم volunteer أو capstone.' });
+    if (!FORMS[id]) return reply({ ok: false, error: 'form غير معروف. استخدم volunteer أو capstone أو idea.' });
     var all = readMaster(FORMS[id].master);
     return reply({ ok: true, form: id, count: all.length, responses: all });
   }

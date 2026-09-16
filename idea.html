@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#08704C">
+<meta name="description" content="نموذج إرسال فكرة — جمعية يعمر للعناية بالمساجد">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<title>إرسال فكرة — جمعية يعمر للعناية بالمساجد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Almarai صار احتياطاً فقط (محارف قليلة + تعذّر تحميل الخط الرسمي)،
+     فيُحمَّل دون أن يحجب أول رسم للصفحة — مهم على شبكة المعرض -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+      media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
+<link rel="stylesheet" href="assets/yaamur.css">
+</head>
+<body>
+
+<div class="crest" aria-hidden="true"></div>
+<div class="pline"><div class="pfill" id="pfill" style="width:0%"></div></div>
+
+<div class="shell">
+  <div class="topbar">
+    <img class="logo logo-light" src="assets/yaamur-logo.png" alt="جمعية يعمر للعناية بالمساجد">
+    <img class="logo logo-dark"  src="assets/yaamur-logo-white.png" alt="جمعية يعمر للعناية بالمساجد">
+    <div class="bar-right">
+      <span class="saved" id="savedlbl">✓ محفوظ على جهازك</span>
+      <span class="step-lbl" id="steplbl"></span>
+      <button class="icon-btn" data-act="theme" title="تبديل المظهر" aria-label="تبديل المظهر">◑</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stage-wrap" id="stage"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   نموذج ③: إرسال فكرة
+   المعرض التطوعي — جامعة الملك فهد للبترول والمعادن
+   ═══════════════════════════════════════════════════════════ */
+
+var CONSENT = 'أوافق على استخدام بيانات التواصل للتواصل معي حول الفرص والمشاريع، '
+            + 'ومشاركة المبادرات والبرامج والأخبار ذات العلاقة بالجمعية.';
+
+window.YFORM = {
+  id:        'idea',
+  title:     'إرسال فكرة',
+  pageTitle: 'إرسال فكرة — جمعية يعمر للعناية بالمساجد',
+  eyebrow:   'إرسال فكرة',
+  sheet:     'الأفكار',
+  storeKey:  'yaamur_idea_v1',
+  refPrefix: 'YI',
+  nameKey:   'studentName',
+
+  /* الصق هنا رابط النشر (Deployment URL) المنتهي بـ /exec */
+ scriptUrl: 'https://script.google.com/macros/s/AKfycbyTZ97NEzF54jY_Tfj2MjlBZGRLGP1-hjRMhnVAHtGtCQ01fr8xSdndHwOXSRYkx_9uHA/exec',
+  /* يجب أن تطابق SECRET في ملف Apps Script تماماً */
+  secret:    'YAAMUR-KFUPM-2026',
+
+  intro: {
+    title: 'عندك فكرة تخدم بيوت الله؟ أرسلها',
+    lede:  'تستقبل <strong>جمعية يعمر للعناية بالمساجد</strong> أفكار طلبة '
+         + 'جامعة الملك فهد للبترول والمعادن: حلولاً لمشكلة في الميدان، أو مبادرة، '
+         + 'أو تحسيناً لخدمة قائمة. اكتب فكرتك في سطور، ونعود إليك إن وجدنا لها مكاناً.',
+    pointsTitle: 'قبل أن تبدأ',
+    points: [
+      '<b>الوقت المتوقّع:</b> أقل من دقيقة — خطوتان قصيرتان.',
+      '<b>لا يلزم أن تكون الفكرة مكتملة</b> — يكفي أن تكون واضحة.',
+      '<b>إجاباتك تُحفظ تلقائياً</b> على جهازك، فلو أُغلقت الصفحة تكمل من حيث توقّفت.'
+    ],
+    cta: 'أرسل فكرتك'
+  },
+
+  steps: [
+    {
+      eyebrow: 'الخطوة ١ — بياناتك',
+      title:   'بيانات التواصل',
+      sub:     'نستخدمها للعودة إليك بشأن فكرتك.',
+      fields: [
+        { k:'studentName', t:'اسم الطالب', type:'text', vald:'name', max:120,
+          ac:'name', ph:'مثال: عبدالرحمن سعد' },
+        { k:'tel', t:'رقم الجوال', type:'tel', vald:'tel', max:16,
+          ac:'tel', ph:'05xxxxxxxx' },
+        { k:'email', t:'البريد الإلكتروني', type:'email', vald:'email', max:100,
+          ac:'email', ph:'myemail@domine.sa' }
+      ]
+    },
+    {
+      eyebrow: 'الخطوة ٢ — فكرتك',
+      title:   'اشرح فكرتك',
+      sub:     'خطوة أخيرة ثم المراجعة والإرسال.',
+      fields: [
+        { k:'ideaTitle', t:'عنوان الفكرة', type:'text', max:150,
+          ph:'مثال: نظام ذكي لترشيد استهلاك المياه في دورات المساجد',
+          hint:'سطر واحد يلخّص الفكرة.' },
+        { k:'ideaDesc', t:'وصف مختصر للفكرة', type:'textarea', max:600,
+          ph:'ما المشكلة التي تعالجها؟ وما الحل المقترح باختصار؟ ومن المستفيد منه؟',
+          hint:'بضعة أسطر تكفي — الوضوح أهم من الطول.' },
+        { k:'consent', t:CONSENT, type:'consent', col:'الموافقة على التواصل' }
+      ]
+    }
+  ],
+
+  done: {
+    title: 'تم استلام فكرتك',
+    sub:   'شكراً لمشاركتك فكرتك مع <strong>يعمر</strong>. '
+         + 'سنطّلع عليها ونتواصل معك إن احتجنا تفصيلاً أو وجدنا لها مساراً مناسباً.'
+  }
+};
+</script>
+<script src="assets/engine.js"></script>
+</body>
+</html>

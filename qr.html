@@ -33,7 +33,7 @@ body{
   direction:rtl;line-height:1.7;-webkit-font-smoothing:antialiased;
   padding:2.5rem 1.25rem 4rem;
 }
-.wrap{max-width:56rem;margin:0 auto;}
+.wrap{max-width:68rem;margin:0 auto;}
 
 .head{
   display:flex;align-items:center;justify-content:space-between;
@@ -44,7 +44,7 @@ body{
 .head .meta{font-size:.78rem;color:var(--ink-3);text-align:left;}
 .head .meta b{display:block;color:var(--ink);font-size:.92rem;font-weight:800;}
 
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
 
 .card{
   background:#fff;border:1px solid var(--line);border-radius:22px;
@@ -56,6 +56,7 @@ body{
   height:5px;background:var(--grn);
 }
 .card.b::before{background:var(--olive);}
+.card.c::before{background:var(--grn-2);}
 
 .tag{
   display:inline-block;font-size:.66rem;font-weight:800;letter-spacing:.06em;
@@ -63,6 +64,7 @@ body{
   padding:.3rem .8rem;margin-bottom:.9rem;align-self:center;
 }
 .card.b .tag{color:#5f6d33;background:rgba(162,179,101,.18);}
+.card.c .tag{color:var(--grn-2);background:rgba(10,92,64,.09);}
 
 .card h2{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem;}
 /* سطران ثابتان حتى يتحاذى الرمزان أفقياً مهما اختلف طول الوصف */
@@ -70,7 +72,7 @@ body{
 
 .qr{
   background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:.7rem;width:15rem;margin:0 auto 1.15rem;
+  padding:.7rem;width:100%;max-width:15rem;margin:0 auto 1.15rem;
 }
 .qr img{width:100%;height:auto;display:block;}
 
@@ -97,16 +99,19 @@ body{
   direction:ltr;display:inline-block;
 }
 
+@media (max-width:1000px){
+  .cards{grid-template-columns:repeat(2,1fr);}
+}
 @media (max-width:680px){
   .cards{grid-template-columns:1fr;}
-  .qr{width:13rem;}
+  .qr{max-width:13rem;}
 }
 
 @media print{
   body{background:#fff;padding:0;}
   .note{display:none;}
   .head{margin-bottom:1.25rem;}
-  .cards{gap:1rem;}
+  .cards{grid-template-columns:repeat(2,1fr);gap:1rem;}
   .card{border-radius:14px;break-inside:avoid;box-shadow:none;}
   .link{background:#fff;}
   @page{margin:14mm;}
@@ -144,17 +149,18 @@ body{
       <a class="link" href="https://yaamur-get.github.io/survey/capstone.html">yaamur-get.github.io/survey/capstone.html</a>
     </div>
 
+    <div class="card c">
+      <span class="tag">النموذج الثالث</span>
+      <h2>إرسال فكرة</h2>
+      <p>لمن لديه فكرة أو مبادرة تخدم المساجد — أرسلها في خطوتين قصيرتين.</p>
+      <div class="qr"><img src="qr/idea.png" alt="رمز QR لنموذج إرسال فكرة"></div>
+      <div class="scan">امسح الرمز بكاميرا جوالك</div>
+      <a class="link" href="https://yaamur-get.github.io/survey/idea.html">yaamur-get.github.io/survey/idea.html</a>
+    </div>
+
   </div>
 
-  <div class="note">
-    <b>للفريق المنظِّم — لا يُطبع مع البطاقات</b>
-    <ul>
-      <li>الرموز أعلاه تشير إلى استضافة GitHub Pages الحالية. إن نُشرت الصفحات على نطاق آخر فأعد توليد الرموز بالروابط الجديدة.</li>
-      <li>نسخ متجهة للطباعة الكبيرة (رول أب، لوحات): <code>qr/volunteer.svg</code> و <code>qr/capstone.svg</code>.</li>
-      <li>قبل المعرض: تأكّد أن حقل <code>scriptUrl</code> في الملفين مُعبَّأ برابط Apps Script المنتهي بـ <code>/exec</code>، وجرّب إرسال استجابة واحدة من كل نموذج.</li>
-      <li>لطباعة البطاقتين فقط: <code>Ctrl/Cmd + P</code> — هذه الملاحظة تُخفى تلقائياً عند الطباعة.</li>
-    </ul>
-  </div>
+  
 
 </div>
 </body>
